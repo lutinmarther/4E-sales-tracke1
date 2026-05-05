@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>4 Elements Sales Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('4elementslogo.PNG') center center no-repeat;
+            background-size: contain;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        /* Chrome/Gold Header */
+        .header-container {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #C0C0C0;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 0 30px rgba(192, 192, 192, 0.3),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .subtitle {
+            color: #C0C0C0;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        
+        /* Chrome Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #C0C0C0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .nav-tab {
+            background: rgba(20, 20, 20, 0.95);
+            color: #C0C0C0;
+            border: 1px solid #555;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(40, 40, 40, 0.95);
+            border-color: #FFD700;
+            color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0a0a0a;
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Chrome Summary Boxes */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #C0C0C0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .summary-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+        }
+        
+        .summary-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+            border-color: #FFD700;
+        }
+        
+        .summary-box h3 {
+            color: #C0C0C0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .summary-box .number {
+            color: #FFD700;
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Chrome Button */
+        .btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0a0a0a;
+            border: 2px solid #FFD700;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            margin-left: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Chrome Table */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 0.9rem;
+            border: 2px solid #C0C0C0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        th {
+            background: rgba(20, 20, 20, 0.95);
+            color: #FFD700;
+            padding: 15px 10px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #FFD700;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        tr:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .money {
+            color: #FFD700;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Chrome Inputs */
+        input, select {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a1a 100%);
+            border: 2px solid #555;
+            color: #FFD700;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Chrome Delete Button */
+        .delete-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border: 1px solid #ff4444;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #C0C0C0;
+            font-style: italic;
+        }
+        
+        /* Chrome Rep Cards */
+        .rep-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #C0C0C0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rep-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+        }
+        
+        .rep-card:hover {
+            border-color: #FFD700;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .rep-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .rep-name {
+            color: #FFD700;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .rep-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .rep-stat {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        
+        .rep-stat-value {
+            color: #FFD700;
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        
+        .rep-stat-label {
+            color: #C0C0C0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+        
+        /* Chrome Forms */
+        .add-rep-form {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #C0C0C0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #FFD700;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Chrome Back Button */
+        .back-btn {
+            background: rgba(20, 20, 20, 0.95);
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateX(-5px);
+        }
+        
+        /* Chrome Rep Detail Header */
+        .rep-detail-header {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rep-detail-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+        }
+        
+        .rep-detail-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .rep-detail-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .detail-stat {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #555;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .detail-stat:hover {
+            border-color: #FFD700;
+            transform: translateY(-3px);
+        }
+        
+        .detail-stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #FFD700;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .detail-stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            color: #C0C0C0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div style="display: flex; align-items: center; gap: 30px;">
+            <img src="4elementslogo.PNG" alt="4 Elements" style="max-width: 150px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3));">
+            <div style="color: #FFD700; font-size: 3.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px rgba(255,215,0,0.5), 3px 3px 6px rgba(0,0,0,0.8); font-family: 'Montserrat', sans-serif;">SALES TRACKER</div>
+        </div>
+        <p class="subtitle">Professional Sales & Commission Tracking System</p>
+    </div>
+    
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('currentMonth')">This Month</button>
+        <button class="nav-tab" onclick="showTab('allJobs')">All Jobs</button>
+        <button class="nav-tab" onclick="showTab('byMonth')">By Month</button>
+        <button class="nav-tab" onclick="showTab('yearly')">Yearly</button>
+        <button class="nav-tab" onclick="showTab('salesReps')">Sales Reps</button>
+    </div>
+    
+    <!-- CURRENT MONTH TAB (This Month) -->
+    <div id="currentMonth" class="tab-content active">
+        <div style="background: rgba(0, 0, 0, 0.9); border: 3px solid #FFD700; color: #FFD700; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.1);">
+            <div style="font-size: 1.8rem; font-weight: 800; font-family: 'Montserrat', sans-serif; text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);" id="currentMonthTitle">April 2026</div>
+            <div style="font-size: 1rem; color: #C0C0C0; margin-top: 8px; letter-spacing: 2px; text-transform: uppercase;">Current Month Tracking</div>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-box">
+                <h3>Contracts</h3>
+                <div class="number" id="currentContracts">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Supplements</h3>
+                <div class="number" id="currentSupplements">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Front End</h3>
+                <div class="number" id="currentFrontEnd">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Back End</h3>
+                <div class="number" id="currentBackEnd">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Commission</h3>
+                <div class="number" id="currentCommission">$0</div>
+            </div>
+        </div>
+        
+        <button class="btn" onclick="addRow()">+ Add Job</button>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Homeowner</th>
+                    <th>Sales Rep</th>
+                    <th>Contract</th>
+                    <th>Supp</th>
+                    <th>Front</th>
+                    <th>Back</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="currentMonthBody">
+                <tr class="empty">
+                    <td colspan="9">No jobs this month yet. Click "Add Job" to start.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- ALL JOBS TAB -->
+    <div id="allJobs" class="tab-content">
+        <div class="summary">
+            <div class="summary-box">
+                <h3>Total Contracts</h3>
+                <div class="number" id="totalContracts">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Supplements</h3>
+                <div class="number" id="totalSupplements">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Front End</h3>
+                <div class="number" id="totalFrontEnd">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Back End</h3>
+                <div class="number" id="totalBackEnd">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Total Commission</h3>
+                <div class="number" id="totalCommission">$0</div>
+            </div>
+        </div>
+        
+        <button class="btn" onclick="addRow()">+ Add Job</button>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Homeowner</th>
+                    <th>Sales Rep</th>
+                    <th>Contract</th>
+                    <th>Supp</th>
+                    <th>Front</th>
+                    <th>Back</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr class="empty">
+                    <td colspan="8">No jobs yet. Click "Add Job" to start.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- BY MONTH TAB -->
+    <div id="byMonth" class="tab-content">
+        <div class="summary">
+            <div class="summary-box">
+                <h3>Select Month</h3>
+                <select id="monthSelect" onchange="renderByMonth()" style="margin-top: 10px;">
+                    <option value="">Choose Month...</option>
+                </select>
+            </div>
+            <div class="summary-box">
+                <h3>Contracts</h3>
+                <div class="number" id="monthContracts">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Supplements</h3>
+                <div class="number" id="monthSupplements">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Commission</h3>
+                <div class="number" id="monthCommission">$0</div>
+            </div>
+        </div>
+        <div id="monthJobsContainer"></div>
+    </div>
+    
+    <!-- YEARLY TAB -->
+    <div id="yearly" class="tab-content">
+        <div class="summary">
+            <div class="summary-box">
+                <h3>Select Year</h3>
+                <select id="yearSelect" onchange="renderYearly()" style="margin-top: 10px;">
+                    <option value="">Choose Year...</option>
+                </select>
+            </div>
+            <div class="summary-box">
+                <h3>Total Contracts</h3>
+                <div class="number" id="yearContracts">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Total Supplements</h3>
+                <div class="number" id="yearSupplements">$0</div>
+            </div>
+            <div class="summary-box">
+                <h3>Total Commission</h3>
+                <div class="number" id="yearCommission">$0</div>
+            </div>
+        </div>
+        <div id="yearJobsContainer"></div>
+    </div>
+    
+    <!-- SALES REPS TAB -->
+    <div id="salesReps" class="tab-content">
+        <div class="add-rep-form">
+            <h3 style="color: #e94560; margin-bottom: 15px;">Add New Sales Rep</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Rep Name</label>
+                    <input type="text" id="newRepName" placeholder="e.g., Collin Hughes">
+                </div>
+                <button class="btn" onclick="addRep()" style="margin-bottom: 0;">Add Rep</button>
+            </div>
+        </div>
+        
+        <div id="repsContainer"></div>
+    </div>
+    
+    <!-- INDIVIDUAL REP TAB -->
+    <div id="repDetail" class="tab-content">
+        <button class="back-btn" onclick="showTab('salesReps')">← Back to All Reps</button>
+        <div id="repDetailContent"></div>
+    </div>
+
+    <script>
+        // Data storage - use original keys
+        let jobs = JSON.parse(localStorage.getItem('simpleJobs')) || [];
+        let reps = JSON.parse(localStorage.getItem('4eReps')) || [];
+        
+        function formatMoney(n) {
+            return '$' + Number(n || 0).toLocaleString();
+        }
+        
+
+        
+        function updateTotals() {
+            let totalContracts = 0;
+            let totalSupplements = 0;
+            let totalFrontEnd = 0;
+            let totalBackEnd = 0;
+            let totalCommission = 0;
+            
+            jobs.forEach(job => {
+                totalContracts += Number(job.contract || 0);
+                totalSupplements += Number(job.totalSupplement || 0);
+                totalFrontEnd += Number(job.frontEnd || 0);
+                totalBackEnd += Number(job.backEnd || 0);
+                totalCommission += Number(job.total || 0);
+            });
+            
+            document.getElementById('totalContracts').textContent = formatMoney(totalContracts);
+            document.getElementById('totalSupplements').textContent = formatMoney(totalSupplements);
+            document.getElementById('totalFrontEnd').textContent = formatMoney(totalFrontEnd);
+            document.getElementById('totalBackEnd').textContent = formatMoney(totalBackEnd);
+            document.getElementById('totalCommission').textContent = formatMoney(totalCommission);
+        }
+        
+        function saveJobs() {
+            localStorage.setItem('simpleJobs', JSON.stringify(jobs));
+            localStorage.setItem('4eReps', JSON.stringify(reps));
+            updateTotals();
+        }
+        
+        function addRow() {
+            const today = new Date();
+            jobs.push({
+                name: '',
+                repId: '',
+                date: today.toISOString().split('T')[0],
+                month: today.getMonth() + 1,
+                year: today.getFullYear(),
+                contract: '',
+                supplement: '',
+                totalSupplement: 0,
+                frontEnd: '',
+                backEnd: '',
+                total: 0
+            });
+            saveJobs();
+            render();
+        }
+        
+        function deleteRow(index) {
+            jobs.splice(index, 1);
+            saveJobs();
+            render();
+        }
+        
+        function updateJob(index, field, value) {
+            if (field === 'name' || field === 'repId') {
+                jobs[index][field] = value;
+            } else {
+                // Parse as float, remove commas
+                const cleanValue = value.toString().replace(/,/g, '');
+                const numVal = parseFloat(cleanValue);
+                jobs[index][field] = isNaN(numVal) ? 0 : numVal;
+            }
+            
+            // If supplement changed, add it to contract and track total supplements
+            if (field === 'supplement') {
+                const contract = parseFloat(jobs[index].contract) || 0;
+                const supplement = parseFloat(jobs[index].supplement) || 0;
+                const currentTotalSupp = parseFloat(jobs[index].totalSupplement) || 0;
+                
+                jobs[index].contract = contract + supplement;
+                jobs[index].totalSupplement = currentTotalSupp + supplement;
+                // Keep the supplement value in the input field
+            }
+            
+            // Auto-calculate total commission
+            const fe = parseFloat(jobs[index].frontEnd) || 0;
+            const be = parseFloat(jobs[index].backEnd) || 0;
+            jobs[index].total = fe + be;
+            
+            saveJobs();
+            render(); // Re-render to show updated contract
+            updateTotals();
+        }
+        
+        function render() {
+            const tbody = document.getElementById('tableBody');
+            
+            if (jobs.length === 0) {
+                tbody.innerHTML = '<tr class="empty"><td colspan="8">No jobs yet. Click "Add Job" to start.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            // Build rep options
+            let repOptions = '<option value="">Select Rep</option>';
+            reps.forEach(rep => {
+                repOptions += `<option value="${rep.id}">${rep.name}</option>`;
+            });
+            
+            jobs.forEach((job, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td><input type="text" value="${job.name}" onchange="updateJob(${index}, 'name', this.value)" placeholder="John Smith"></td>
+                    <td>
+                        <select onchange="updateJob(${index}, 'repId', this.value)">
+                            ${repOptions.replace(`value="${job.repId}"`, `value="${job.repId}" selected`)}
+                        </select>
+                    </td>
+                    <td><input type="number" value="${job.contract}" onchange="updateJob(${index}, 'contract', this.value)" placeholder="0" step="0.01"></td>
+                    <td><input type="number" value="${job.totalSupplement || 0}" onchange="updateJob(${index}, 'supplement', this.value)" placeholder="0" step="0.01"></td>
+                    <td><input type="number" value="${job.frontEnd}" onchange="updateJob(${index}, 'frontEnd', this.value)" placeholder="0" step="0.01"></td>
+                    <td><input type="number" value="${job.backEnd}" onchange="updateJob(${index}, 'backEnd', this.value)" placeholder="0" step="0.01"></td>
+                    <td class="money">${formatMoney(job.total)}</td>
+                    <td><button class="delete-btn" onclick="deleteRow(${index})">Delete</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // SALES REP FUNCTIONS
+        function addRep() {
+            const name = document.getElementById('newRepName').value.trim();
+            if (!name) {
+                alert('Please enter a rep name');
+                return;
+            }
+            
+            if (reps.find(r => r.name.toLowerCase() === name.toLowerCase())) {
+                alert('A rep with that name already exists');
+                return;
+            }
+            
+            reps.push({
+                id: Date.now().toString(),
+                name: name
+            });
+            
+            document.getElementById('newRepName').value = '';
+            saveJobs();
+            renderReps();
+            render();
+        }
+        
+        function deleteRep(id) {
+            if (!confirm('Delete this rep? Their jobs will show as "No Rep"')) return;
+            
+            reps = reps.filter(r => r.id !== id);
+            jobs.forEach(j => {
+                if (j.repId === id) j.repId = '';
+            });
+            saveJobs();
+            renderReps();
+            render();
+        }
+        
+        function renderReps() {
+            const container = document.getElementById('repsContainer');
+            
+            if (reps.length === 0) {
+                container.innerHTML = '<div class="empty">No sales reps yet. Add your first rep above.</div>';
+                return;
+            }
+            
+            container.innerHTML = reps.map(rep => {
+                const repJobs = jobs.filter(j => j.repId === rep.id);
+                const totalJobs = repJobs.length;
+                const totalContracts = repJobs.reduce((sum, j) => sum + (Number(j.contract) || 0), 0);
+                const totalCommission = repJobs.reduce((sum, j) => sum + (Number(j.total) || 0), 0);
+                
+                return `
+                    <div class="rep-card" onclick="showRepDetail('${rep.id}')">
+                        <div class="rep-header">
+                            <span class="rep-name">${rep.name}</span>
+                            <button class="delete-btn" onclick="event.stopPropagation(); deleteRep('${rep.id}')">Delete</button>
+                        </div>
+                        <div class="rep-stats">
+                            <div class="rep-stat">
+                                <div class="rep-stat-value">${totalJobs}</div>
+                                <div class="rep-stat-label">Jobs</div>
+                            </div>
+                            <div class="rep-stat">
+                                <div class="rep-stat-value">${formatMoney(totalContracts)}</div>
+                                <div class="rep-stat-label">Contracts</div>
+                            </div>
+                            <div class="rep-stat">
+                                <div class="rep-stat-value">${formatMoney(totalCommission)}</div>
+                                <div class="rep-stat-label">Commission</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function showRepDetail(repId) {
+            const rep = reps.find(r => r.id === repId);
+            if (!rep) return;
+            
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('repDetail').classList.add('active');
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            
+            const repJobs = jobs.filter(j => j.repId === repId);
+            const totalJobs = repJobs.length;
+            const totalContracts = repJobs.reduce((sum, j) => sum + (Number(j.contract) || 0), 0);
+            const totalSupplements = repJobs.reduce((sum, j) => sum + (Number(j.totalSupplement) || 0), 0);
+            const totalCommission = repJobs.reduce((sum, j) => sum + (Number(j.total) || 0), 0);
+            const avgContract = totalJobs > 0 ? totalContracts / totalJobs : 0;
+            
+            let html = `
+                <div class="rep-detail-header">
+                    <div class="rep-detail-name">${rep.name}</div>
+                    <div class="rep-detail-stats">
+                        <div class="detail-stat">
+                            <div class="detail-stat-value">${totalJobs}</div>
+                            <div class="detail-stat-label">Total Jobs</div>
+                        </div>
+                        <div class="detail-stat">
+                            <div class="detail-stat-value">${formatMoney(totalContracts)}</div>
+                            <div class="detail-stat-label">Contracts</div>
+                        </div>
+                        <div class="detail-stat">
+                            <div class="detail-stat-value">${formatMoney(totalSupplements)}</div>
+                            <div class="detail-stat-label">Supplements</div>
+                        </div>
+                        <div class="detail-stat">
+                            <div class="detail-stat-value">${formatMoney(totalCommission)}</div>
+                            <div class="detail-stat-label">Commission</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (repJobs.length > 0) {
+                html += '<table><thead><tr><th>Homeowner</th><th>Contract</th><th>Supp</th><th>Front</th><th>Back</th><th>Total</th></tr></thead><tbody>';
+                repJobs.forEach(job => {
+                    html += `<tr>
+                        <td>${job.name || 'Unnamed'}</td>
+                        <td class="money">${formatMoney(job.contract)}</td>
+                        <td class="money">${formatMoney(job.supplement)}</td>
+                        <td class="money">${formatMoney(job.frontEnd)}</td>
+                        <td class="money">${formatMoney(job.backEnd)}</td>
+                        <td class="money">${formatMoney(job.total)}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            } else {
+                html += '<div class="empty">No jobs for this rep yet</div>';
+            }
+            
+            document.getElementById('repDetailContent').innerHTML = html;
+        }
+        
+        // BY MONTH FUNCTIONS
+        function populateMonthSelect() {
+            const select = document.getElementById('monthSelect');
+            const months = {};
+            
+            jobs.forEach(job => {
+                if (job.month && job.year) {
+                    const key = `${job.year}-${String(job.month).padStart(2, '0')}`;
+                    const monthName = new Date(job.year, job.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+                    months[key] = monthName;
+                }
+            });
+            
+            // Sort months descending
+            const sortedKeys = Object.keys(months).sort().reverse();
+            
+            let html = '<option value="">Choose Month...</option>';
+            sortedKeys.forEach(key => {
+                html += `<option value="${key}">${months[key]}</option>`;
+            });
+            
+            select.innerHTML = html;
+        }
+        
+        function renderByMonth() {
+            const selected = document.getElementById('monthSelect').value;
+            if (!selected) {
+                document.getElementById('monthJobsContainer').innerHTML = '';
+                document.getElementById('monthContracts').textContent = '$0';
+                document.getElementById('monthSupplements').textContent = '$0';
+                document.getElementById('monthCommission').textContent = '$0';
+                return;
+            }
+            
+            const [year, month] = selected.split('-');
+            const monthJobs = jobs.filter(j => j.month == month && j.year == year);
+            
+            const totalContracts = monthJobs.reduce((sum, j) => sum + (Number(j.contract) || 0), 0);
+            const totalSupplements = monthJobs.reduce((sum, j) => sum + (Number(j.totalSupplement) || 0), 0);
+            const totalCommission = monthJobs.reduce((sum, j) => sum + (Number(j.total) || 0), 0);
+            
+            document.getElementById('monthContracts').textContent = formatMoney(totalContracts);
+            document.getElementById('monthSupplements').textContent = formatMoney(totalSupplements);
+            document.getElementById('monthCommission').textContent = formatMoney(totalCommission);
+            
+            // Group by rep
+            const byRep = {};
+            monthJobs.forEach(job => {
+                const repName = getRepName(job.repId) || 'No Rep';
+                if (!byRep[repName]) {
+                    byRep[repName] = { jobs: 0, contracts: 0, supplements: 0, commission: 0 };
+                }
+                byRep[repName].jobs++;
+                byRep[repName].contracts += Number(job.contract) || 0;
+                byRep[repName].supplements += Number(job.totalSupplement) || 0;
+                byRep[repName].commission += Number(job.total) || 0;
+            });
+            
+            let html = '<h3 style="color: #e94560; margin: 20px 0 15px;">By Sales Rep</h3>';
+            html += '<table><thead><tr><th>Rep</th><th>Jobs</th><th>Contracts</th><th>Supplements</th><th>Commission</th></tr></thead><tbody>';
+            
+            Object.entries(byRep).forEach(([repName, stats]) => {
+                html += `<tr>
+                    <td><strong>${repName}</strong></td>
+                    <td>${stats.jobs}</td>
+                    <td class="money">${formatMoney(stats.contracts)}</td>
+                    <td class="money">${formatMoney(stats.supplements)}</td>
+                    <td class="money">${formatMoney(stats.commission)}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            
+            // Show all jobs
+            html += '<h3 style="color: #e94560; margin: 30px 0 15px;">All Jobs</h3>';
+            if (monthJobs.length > 0) {
+                html += '<table><thead><tr><th>Date</th><th>Homeowner</th><th>Rep</th><th>Contract</th><th>Supp</th><th>Front</th><th>Back</th><th>Total</th></tr></thead><tbody>';
+                monthJobs.forEach(job => {
+                    html += `<tr>
+                        <td>${job.date || '-'}</td>
+                        <td>${job.name || 'Unnamed'}</td>
+                        <td>${getRepName(job.repId) || 'No Rep'}</td>
+                        <td class="money">${formatMoney(job.contract)}</td>
+                        <td class="money">${formatMoney(job.totalSupplement)}</td>
+                        <td class="money">${formatMoney(job.frontEnd)}</td>
+                        <td class="money">${formatMoney(job.backEnd)}</td>
+                        <td class="money">${formatMoney(job.total)}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+            
+            document.getElementById('monthJobsContainer').innerHTML = html;
+        }
+        
+        // YEARLY FUNCTIONS
+        function populateYearSelect() {
+            const select = document.getElementById('yearSelect');
+            const years = new Set();
+            
+            console.log('Populating year select. Jobs:', jobs.length);
+            
+            jobs.forEach(job => {
+                // Get year from job.year or extract from job.date
+                let year = job.year;
+                if (!year && job.date) {
+                    year = new Date(job.date).getFullYear();
+                }
+                // If still no year, assume current year
+                if (!year) {
+                    year = new Date().getFullYear();
+                }
+                if (year) years.add(year);
+            });
+            
+            // Add current year if no jobs yet
+            if (years.size === 0) years.add(new Date().getFullYear());
+            
+            const sortedYears = Array.from(years).sort().reverse();
+            
+            let html = '<option value="">Choose Year...</option>';
+            sortedYears.forEach(year => {
+                html += `<option value="${year}">${year}</option>`;
+            });
+            
+            select.innerHTML = html;
+        }
+        
+        function renderYearly() {
+            const selectedYear = document.getElementById('yearSelect').value;
+            if (!selectedYear) {
+                document.getElementById('yearJobsContainer').innerHTML = '';
+                document.getElementById('yearContracts').textContent = '$0';
+                document.getElementById('yearSupplements').textContent = '$0';
+                document.getElementById('yearCommission').textContent = '$0';
+                return;
+            }
+            
+            // Filter jobs for selected year (check job.year or extract from date, default to current year)
+            const yearJobs = jobs.filter(j => {
+                let jobYear = j.year || (j.date ? new Date(j.date).getFullYear() : null);
+                if (!jobYear) jobYear = new Date().getFullYear();
+                return jobYear == selectedYear;
+            });
+            
+            const totalContracts = yearJobs.reduce((sum, j) => sum + (Number(j.contract) || 0), 0);
+            const totalSupplements = yearJobs.reduce((sum, j) => sum + (Number(j.totalSupplement) || 0), 0);
+            const totalCommission = yearJobs.reduce((sum, j) => sum + (Number(j.total) || 0), 0);
+            
+            document.getElementById('yearContracts').textContent = formatMoney(totalContracts);
+            document.getElementById('yearSupplements').textContent = formatMoney(totalSupplements);
+            document.getElementById('yearCommission').textContent = formatMoney(totalCommission);
+            
+            // Monthly breakdown
+            const byMonth = {};
+            for (let i = 1; i <= 12; i++) {
+                byMonth[i] = { jobs: 0, contracts: 0, supplements: 0, commission: 0 };
+            }
+            
+            yearJobs.forEach(job => {
+                // Get month from job.month or extract from job.date
+                let month = job.month;
+                if (!month && job.date) {
+                    month = new Date(job.date).getMonth() + 1;
+                }
+                // If still no month, use current month
+                if (!month) {
+                    month = new Date().getMonth() + 1;
+                }
+                if (month) {
+                    byMonth[month].jobs++;
+                    byMonth[month].contracts += Number(job.contract) || 0;
+                    byMonth[month].supplements += Number(job.totalSupplement) || 0;
+                    byMonth[month].commission += Number(job.total) || 0;
+                }
+            });
+            
+            let html = '<h3 style="color: #e94560; margin: 20px 0 15px;">Monthly Breakdown</h3>';
+            html += '<table><thead><tr><th>Month</th><th>Jobs</th><th>Contracts</th><th>Supplements</th><th>Commission</th></tr></thead><tbody>';
+            
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            Object.entries(byMonth).forEach(([month, stats]) => {
+                if (stats.jobs > 0) {
+                    html += `<tr>
+                        <td><strong>${monthNames[month - 1]}</strong></td>
+                        <td>${stats.jobs}</td>
+                        <td class="money">${formatMoney(stats.contracts)}</td>
+                        <td class="money">${formatMoney(stats.supplements)}</td>
+                        <td class="money">${formatMoney(stats.commission)}</td>
+                    </tr>`;
+                }
+            });
+            
+            html += '</tbody></table>';
+            
+            // By rep for year
+            const byRep = {};
+            yearJobs.forEach(job => {
+                const repName = getRepName(job.repId) || 'No Rep';
+                if (!byRep[repName]) {
+                    byRep[repName] = { jobs: 0, contracts: 0, supplements: 0, commission: 0 };
+                }
+                byRep[repName].jobs++;
+                byRep[repName].contracts += Number(job.contract) || 0;
+                byRep[repName].supplements += Number(job.totalSupplement) || 0;
+                byRep[repName].commission += Number(job.total) || 0;
+            });
+            
+            html += '<h3 style="color: #e94560; margin: 30px 0 15px;">By Sales Rep</h3>';
+            html += '<table><thead><tr><th>Rep</th><th>Jobs</th><th>Contracts</th><th>Supplements</th><th>Commission</th></tr></thead><tbody>';
+            
+            Object.entries(byRep).forEach(([repName, stats]) => {
+                html += `<tr>
+                    <td><strong>${repName}</strong></td>
+                    <td>${stats.jobs}</td>
+                    <td class="money">${formatMoney(stats.contracts)}</td>
+                    <td class="money">${formatMoney(stats.supplements)}</td>
+                    <td class="money">${formatMoney(stats.commission)}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('yearJobsContainer').innerHTML = html;
+        }
+        
+        // CURRENT MONTH FUNCTIONS
+        function renderCurrentMonth() {
+            const today = new Date();
+            const currentMonth = today.getMonth() + 1;
+            const currentYear = today.getFullYear();
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            document.getElementById('currentMonthTitle').textContent = monthNames[currentMonth - 1] + ' ' + currentYear;
+            
+            // Filter jobs for current month only
+            const monthJobs = jobs.filter(j => j.month == currentMonth && j.year == currentYear);
+            
+            // Calculate totals
+            let totalContracts = 0;
+            let totalSupplements = 0;
+            let totalFrontEnd = 0;
+            let totalBackEnd = 0;
+            let totalCommission = 0;
+            
+            monthJobs.forEach(job => {
+                totalContracts += Number(job.contract) || 0;
+                totalSupplements += Number(job.totalSupplement) || 0;
+                totalFrontEnd += Number(job.frontEnd) || 0;
+                totalBackEnd += Number(job.backEnd) || 0;
+                totalCommission += Number(job.total) || 0;
+            });
+            
+            document.getElementById('currentContracts').textContent = formatMoney(totalContracts);
+            document.getElementById('currentSupplements').textContent = formatMoney(totalSupplements);
+            document.getElementById('currentFrontEnd').textContent = formatMoney(totalFrontEnd);
+            document.getElementById('currentBackEnd').textContent = formatMoney(totalBackEnd);
+            document.getElementById('currentCommission').textContent = formatMoney(totalCommission);
+            
+            // Render table
+            const tbody = document.getElementById('currentMonthBody');
+            
+            if (monthJobs.length === 0) {
+                tbody.innerHTML = '<tr class="empty"><td colspan="9">No jobs this month yet. Click "Add Job" to start.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            // Build rep options
+            let repOptions = '<option value="">Select Rep</option>';
+            reps.forEach(rep => {
+                repOptions += `<option value="${rep.id}">${rep.name}</option>`;
+            });
+            
+            // Find index in main jobs array for editing
+            monthJobs.forEach(job => {
+                const index = jobs.findIndex(j => j.id === job.id);
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td><input type="date" value="${job.date || ''}" onchange="updateJob(${index}, 'date', this.value)" style="font-size: 0.75rem;"></td>
+                    <td><input type="text" value="${job.name}" onchange="updateJob(${index}, 'name', this.value)" placeholder="Name"></td>
+                    <td>
+                        <select onchange="updateJob(${index}, 'repId', this.value)">
+                            ${repOptions.replace(`value="${job.repId}"`, `value="${job.repId}" selected`)}
+                        </select>
+                    </td>
+                    <td><input type="number" value="${job.contract}" onchange="updateJob(${index}, 'contract', this.value)" placeholder="0" step="0.01"></td>
+                    <td><input type="number" value="${job.totalSupplement || 0}" onchange="updateJob(${index}, 'supplement', this.value)" placeholder="0" step="0.01"></td>
+                    <td><input type="number" value="${job.frontEnd}" onchange="updateJob(${index}, 'frontEnd', this.value)" placeholder="0" step="0.01"></td>
+                    <td><input type="number" value="${job.backEnd}" onchange="updateJob(${index}, 'backEnd', this.value)" placeholder="0" step="0.01"></td>
+                    <td class="money">${formatMoney(job.total)}</td>
+                    <td><button class="delete-btn" onclick="deleteRow(${index}); renderCurrentMonth();">Delete</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Touch-friendly showTab function
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Find and activate the clicked button
+            const allNavTabs = document.querySelectorAll('.nav-tab');
+            allNavTabs.forEach(tab => {
+                const onclickAttr = tab.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.indexOf("'" + tabName + "'") !== -1) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Render appropriate content
+            if (tabName === 'salesReps') {
+                renderReps();
+            } else if (tabName === 'byMonth') {
+                populateMonthSelect();
+                renderByMonth();
+            } else if (tabName === 'yearly') {
+                populateYearSelect();
+                renderYearly();
+            } else if (tabName === 'currentMonth') {
+                renderCurrentMonth();
+            } else if (tabName === 'allJobs') {
+                render();
+            }
+        }
+        
+        // Add touch event listeners for better mobile support
+        document.addEventListener('DOMContentLoaded', function() {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                // Add touchend for iPad/iPhone
+                tab.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    const onclickStr = this.getAttribute('onclick');
+                    if (onclickStr) {
+                        const match = onclickStr.match(/showTab\('([^']+)'\)/);
+                        if (match) {
+                            showTab(match[1]);
+                        }
+                    }
+                });
+            });
+        });
+        
+        // Initial load
+        updateTotals();
+        render();
+        renderCurrentMonth();
+    </script>
+</body>
+</html>
